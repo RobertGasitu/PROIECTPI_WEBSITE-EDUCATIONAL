@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+<meta charset="UTF-8">
+<title>Șiruri de caractere</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div class='container'>
+
+   <header>
+	<img src="logo.png" alt="robi's logo">
+
+	   <nav>
+	   	 <ul>
+	   	 	<li><a href="index.php">INTRODUCERE</a></li>
+	   	 	<li><a href="functii.php">FUNCȚII</a></li>
+	   	 	<li><a href="probleme_rezolvate.php">PROBLEME REZOLVATE</a></li>
+	   	 	<li><a href="probleme_propuse.php">PROBLEME PROPUSE</a></li>
+	   	 	<li><a href="test.php">TESTE</a></li>
+	   	 	<li style="float:right;"><a href="contact.php">CONTACT</a></li>
+        <li style="float:right;"><a href="signup.php">LOGIN</a></li>
+	   	 </ul>
+           
+		
+	  </nav>
+
+   </header>
+
+</div>
+<div id="quiz"></div>
+				<button id="submit">Submit</button>
+				<div id="results" style="font-size :30px;margin-bottom: 25px"></div>
+
+</body>
+<script>
+	var myQuestions = [
+  {
+    question: "1.Ce afiseaza strlen(\"informatica\")?",
+    answers: {
+      a: '11',
+      b: '10',
+      c: '12'
+    },
+    correctAnswer: 'a'
+  },
+  {
+    question: "2.Varianta corecta pentru a verifica daca un caracter c este vocala este...",
+    answers: {
+      a: 'if(strchr(\"aeiou"\',c)!=NULL)',
+      b: 'if(strchr(c,\"aeiou\")!=NULL)',
+      c: 'if(c!=strchr(aeiou))'
+    },
+    correctAnswer: 'a'
+  },
+  {
+    question: "3.Ce se stocheaza in variabila s in urma apelului strcpy(s,\"examen\"+2) ?",
+    answers: {
+      a: 'men',
+      b: 'amen',
+      c: 'xamen'
+    },
+    correctAnswer: 'b'
+  },
+  {
+    question: "4.Pentru a verifica ca doua cuvinte a si b sunt egale utilizam functia ...",
+    answers: {
+      a: 'strstr',
+      b: 'strcpy',
+      c: 'strcmp'
+    },
+    correctAnswer: 'c'
+  },
+  {
+    question: "5.Ce se afiseaza in urma apelului strrev(\"cojoc\") ?",
+    answers: {
+      a: 'cojoc',
+      b: 'joc',
+      c: 'cooc'
+    },
+    correctAnswer: 'a'
+  },
+  {
+    question: "6.Ce verifica functia isalpha?",
+    answers: {
+      a: 'Verifica daca un caracter este alfa-numeric',
+      b: 'Verifica daca un caracter este litera ',
+      c: 'Verifica daca un caracter este semn de punctuatie'
+    },
+    correctAnswer: 'b'
+  },
+  {
+    question: "7.Pentru a citi un text a ce poate contine maxim 100 de caractere utilizam...",
+    answers: {
+      a: 'cin(text,100)',
+      b: 'cin>>(text)',
+      c: 'cin.getline(a,101)'
+    },
+    correctAnswer: 'c'
+  },
+  {
+    question: "8.In urma apelului char *p=strrchr(\"informatica\",\'i\') se afiseaza pe ecran....",
+    answers: {
+      a: 'informatica',
+      b: 'ica',
+      c: 'infoica'
+    },
+    correctAnswer: 'b'
+  },
+  {
+    question: "9.Pentru a sterge caracterul din mijloc al cuvantului a[10]=\"munte\" scriem....",
+    answers: {
+      a: 'strcpy(a+2,a+3)',
+      b: 'strcpy(a+1,a+3)',
+      c: 'strcpy(a+3,a+2)'
+    },
+    correctAnswer: 'a'
+  },
+  {
+    question: "10.Ce functie concateneaza un sir la capatul altui sir?",
+    answers: {
+      a: 'strtok',
+      b: 'strstr',
+      c: 'strcat'
+    },
+    correctAnswer: 'c'
+  }
+];
+var quizContainer = document.getElementById('quiz');
+var resultsContainer = document.getElementById('results');
+var submitButton = document.getElementById('submit');
+generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton);
+function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
+  function showQuestions(questions, quizContainer){
+    var output = [];
+    var answers;
+    for(var i=0; i<questions.length; i++){
+      answers = [];
+      // Pentru fiecare raspuns valabil adaugam un buton radio
+      for(letter in questions[i].answers){
+        answers.push(
+          '<label>'
+            + '<input type="radio" name="question'+i+'" value="'+letter+'">'
+            + letter + ': '
+            + questions[i].answers[letter]
+          + '</label>'
+        );
+      }
+      // Pentru fiecare intrebare si raspuns afisam
+      output.push(
+        '<div class="question">' + questions[i].question + '</div>'
+        + '<div class="answers">' + answers.join("<br>") + '</div>'
+      );
+    }
+    quizContainer.innerHTML = output.join('');
+  }
+  function showResults(questions, quizContainer, resultsContainer){
+    // gather answer containers from our quiz
+    var answerContainers = quizContainer.querySelectorAll('.answers');
+    var userAnswer = '';
+    var numCorrect = 0;
+    for(var i=0; i<questions.length; i++){
+      userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
+      // Raspuns Corect Verde
+      if(userAnswer===questions[i].correctAnswer){
+        numCorrect++;
+        answerContainers[i].style.color = 'lightgreen';
+      }
+      // Raspuns Gresit sau Gol Rosu
+      else{
+        answerContainers[i].style.color = 'red';
+      }
+    }
+    // Afisarea Notei+Mesaj
+	if(numCorrect<=4){
+    resultsContainer.innerHTML ='Ai obținut nota ' + numCorrect + '.' + 'Trebuie sa inveti mai mult!';
+	}
+	else if(numCorrect<=8){
+    resultsContainer.innerHTML ='Ai obținut nota ' + numCorrect + '.' + 'Esti pe drumul cel bun , mai reia chestiunile pe care nu le stii!';
+	}
+	else {
+    resultsContainer.innerHTML ='Ai obținut nota ' + numCorrect + '.' + 'Felicitari!';
+	}
+  }
+  // Afisarea Intrebarilor
+  showQuestions(questions, quizContainer);
+  // Afisarea Rezultatului
+  submitButton.onclick = function(){
+    showResults(questions, quizContainer, resultsContainer);
+  }
+}
+</script>
+
+
+</html>
+
+
+
+
+
+question: "<?php echo $intrebari[0]; ?> ?",
+    answers: {
+      a: '<?php $raspunsuri[0]; ?>',
+      b: '<?php $raspunsuri[1]; ?>',
+      c: '<?php $raspunsuri[2]; ?>'
+    },
+    correctAnswer: '<?php $corecte[0]; ?>'
+  },
+
+
+
+
+
+  {
+    question: "<?php echo '1.'.$intrebari[0]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[0]; ?>',
+      b: '<?php echo $raspunsuri[1]; ?>',
+      c: '<?php echo $raspunsuri[2]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[0]; ?>'
+  },
+  {
+    question: "<?php echo '2.'.$intrebari[1]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[3]; ?>',
+      b: '<?php echo $raspunsuri[4]; ?>',
+      c: '<?php echo $raspunsuri[5]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[1]; ?>'
+  },
+  {
+    question: "<?php echo '3.'.$intrebari[2]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[6]; ?>',
+      b: '<?php echo $raspunsuri[7]; ?>',
+      c: '<?php echo $raspunsuri[8]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[2]; ?>'
+  },
+  {
+    question: "<?php echo '4.'.$intrebari[3]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[9]; ?>',
+      b: '<?php echo $raspunsuri[10]; ?>',
+      c: '<?php echo $raspunsuri[11]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[3]; ?>'
+  },
+  {
+    question: "<?php echo '5.'.$intrebari[4]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[12]; ?>',
+      b: '<?php echo $raspunsuri[13]; ?>',
+      c: '<?php echo $raspunsuri[14]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[4]; ?>'
+  },
+  {
+    question: "<?php echo '6.'.$intrebari[5]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[15]; ?>',
+      b: '<?php echo $raspunsuri[16]; ?>',
+      c: '<?php echo $raspunsuri[17]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[5]; ?>'
+  },
+  {
+    question: "<?php echo '7.'.$intrebari[6]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[18]; ?>',
+      b: '<?php echo $raspunsuri[19]; ?>',
+      c: '<?php echo $raspunsuri[20]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[6]; ?>'
+  },
+  {
+    question: "<?php echo '8.'.$intrebari[7]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[21]; ?>',
+      b: '<?php echo $raspunsuri[22]; ?>',
+      c: '<?php echo $raspunsuri[23]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[7]; ?>'
+  },
+  {
+    question: "<?php echo '9.'.$intrebari[8]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[24]; ?>',
+      b: '<?php echo $raspunsuri[25]; ?>',
+      c: '<?php echo $raspunsuri[26]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[8]; ?>'
+  },
+  {
+    question: "<?php echo '10.'.$intrebari[9]; ?> ?",
+    answers: {
+      a: '<?php echo $raspunsuri[27]; ?>',
+      b: '<?php echo $raspunsuri[28]; ?>',
+      c: '<?php echo $raspunsuri[29]; ?>'
+    },
+    correctAnswer: '<?php echo $corecte[9]; ?>'
+  }
